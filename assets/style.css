@@ -194,3 +194,22 @@ h1 {
         padding: 6px;
     }
 }
+.submit-button {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.submit-button button {
+    background-color: #7f6b44;
+    color: #fff;
+    border: none;
+    padding: 10px 30px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.submit-button button:hover {
+    background-color: #9d8a6a;
+}
