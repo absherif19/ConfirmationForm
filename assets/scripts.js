@@ -32,25 +32,47 @@ console.log("Phone (not encoded):", phone);
 // Store the decoded values in session storage
 if (decodedEmail) {
     sessionStorage.setItem('decodedEmail', decodedEmail);
+    console.log('Email stored in session:', sessionStorage.getItem('decodedEmail'));
 }
 
 if (decodedId) {
     sessionStorage.setItem('decodedId', decodedId);
+    console.log('ID stored in session:', sessionStorage.getItem('decodedId'));
 }
 
 if (phone) {
     sessionStorage.setItem('phone', phone);
+    console.log('Phone stored in session:', sessionStorage.getItem('phone'));
 }
 
+// Ensure the form fields exist before trying to set their values
+const emailField = document.getElementById('emailField');
+const idField = document.getElementById('idField');
+const phoneField = document.getElementById('phoneField');
+
+console.log('Initial form field values:', {
+    emailField: emailField ? emailField.value : null,
+    idField: idField ? idField.value : null,
+    phoneField: phoneField ? phoneField.value : null
+});
 
 if (emailField) {
     emailField.value = sessionStorage.getItem('decodedEmail') || '';
+    console.log('Email field set to:', emailField.value);
 }
 
 if (idField) {
     idField.value = sessionStorage.getItem('decodedId') || '';
+    console.log('ID field set to:', idField.value);
 }
 
 if (phoneField) {
     phoneField.value = sessionStorage.getItem('phone') || '';
+    console.log('Phone field set to:', phoneField.value);
 }
+
+console.log('Final form field values:', {
+    emailField: emailField ? emailField.value : null,
+    idField: idField ? idField.value : null,
+    phoneField: phoneField ? phoneField.value : null
+});
