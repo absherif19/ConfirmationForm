@@ -32,7 +32,7 @@ function sendOTP(otp) {
 }
 
 // Endpoint to handle OTP requests
-app.post('/send-otp', async (req, res) => {
+app.post('http://localhost:3000/send-otp', async (req, res) => {
     const { phoneNumber } = req.body;
 
     const otp = generateOTP();
