@@ -1,3 +1,4 @@
+// Function to decode Base64 encoded strings
 function decodeBase64(encodedString) {
     try {
         return atob(encodedString);
@@ -28,6 +29,10 @@ console.log("Decoded email:", decodedEmail);
 console.log("Decoded ID:", decodedId);
 console.log("Phone (not encoded):", phone);
 
+// Ensure the form fields exist before trying to set their values
+const emailField = document.getElementById('emailField');
+const idField = document.getElementById('idField');
+const phoneField = document.getElementById('phoneField');
 
 if (emailField) {
     emailField.value = decodedEmail || '';
