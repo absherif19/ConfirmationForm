@@ -29,12 +29,8 @@ document.querySelector('.submit-button button').addEventListener('click', (e) =>
     // Get the phone number from the session storage (this should be pre-filled from earlier steps)
     const phoneNumber = sessionStorage.getItem('phone');
 
-    if (phoneNumber) {
-        // Send OTP request to the server
+
         sendOtpToServer(phoneNumber);
-    } else {
-        alert("Phone number not found. Please ensure it is correctly entered.");
-    }
 });
 
 // Function to show the OTP modal
