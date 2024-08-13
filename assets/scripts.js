@@ -1,6 +1,10 @@
-// Function to decode Base64 encoded strings
 function decodeBase64(encodedString) {
-    return decodeURIComponent(atob(encodedString));
+    try {
+        return atob(encodedString);
+    } catch (e) {
+        console.error("Error decoding Base64 string:", e);
+        return null;
+    }
 }
 
 // Function to extract query parameters from the URL
@@ -14,8 +18,8 @@ function getQueryParams() {
 
 // Extract and decode the query parameters
 const { email, id, phone } = getQueryParams();
-const decodedEmail = decodeBase64(email);
-const decodedId = decodeBase64(id);
+const decodedEmail = email ? decodeBase64(email) : null;
+const decodedId = id ? decodeBase64(id) : null;
 
 // Log the encoded and decoded values to the console
 console.log("Encoded email:", email);
@@ -24,7 +28,15 @@ console.log("Decoded email:", decodedEmail);
 console.log("Decoded ID:", decodedId);
 console.log("Phone (not encoded):", phone);
 
-// You can also use these values to pre-fill the form if needed
-document.getElementById('emailField').value = decodedEmail;
-document.getElementById('idField').value = decodedId;
-document.getElementById('phoneField').value = phone;
+
+if (emailField) {
+    emailField.value = decodedEmail || '';
+}
+
+if (idField) {
+    idField.value = decodedId || '';
+}
+
+if (phoneField) {
+    phoneField.value = phone || '';
+}
