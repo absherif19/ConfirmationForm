@@ -1,6 +1,6 @@
 // Function to send the OTP request to the server
 function sendOtpToServer(phoneNumber) {
-    fetch('/send-otp', {
+    fetch('http://localhost:3000/send-otp', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

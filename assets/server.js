@@ -22,10 +22,10 @@ function generateOTP(length = 6) {
 }
 
 // Function to send the OTP via Amazon SNS
-function sendOTP(phoneNumber, otp) {
+function sendOTP(otp) {
     const params = {
         Message: `Your OTP is ${otp}. Please enter this to confirm your submission.`,
-        PhoneNumber: phoneNumber,
+        PhoneNumber: '+971562588105',
     };
 
     return sns.publish(params).promise();
