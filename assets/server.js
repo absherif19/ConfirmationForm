@@ -1,23 +1,27 @@
 require('dotenv').config();
 const express = require('express');
-const cors = require('cors'); // Import CORS to handle cross-origin requests
+const cors = require('cors');
 const AWS = require('aws-sdk');
 
 const app = express();
 app.use(express.json());
 
-// Enable CORS for the specific origin (if you need to allow requests from a specific domain)
 app.use(cors({
-    origin: 'https://absherif19.github.io', // Replace with your client URL if needed
+    origin: 'https://absherif19.github.io',
 }));
 
+console.log('AWS_REGION:', process.env.AWS_REGION);
+console.log('AWS_ACCESS_KEY_ID:', process.env.AWS_ACCESS_KEY_ID);
+console.log('AWS_SECRET_ACCESS_KEY:', process.env.AWS_SECRET_ACCESS_KEY);
+
 const sns = new AWS.SNS({
-    region: process.env.AWS_REGION || 'eu-north-1', 
+    region: process.env.AWS_REGION || 'eu-north-1',
     accessKeyId: process.env.AWS_ACCESS_KEY_ID,
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
 });
+AWS.config.logger = console;
 
-// Function to generate a random OTP
+
 function generateOTP(length = 6) {
     let otp = '';
     for (let i = 0; i < length; i++) {
@@ -26,28 +30,29 @@ function generateOTP(length = 6) {
     return otp;
 }
 
-// Function to send the OTP via Amazon SNS
 function sendOTP(phoneNumber, otp) {
     const params = {
         Message: `Your OTP is ${otp}. Please enter this to confirm your submission.`,
-        PhoneNumber: phoneNumber, // Use the phone number from the request
+        PhoneNumber: phoneNumber,
     };
+
+    console.log('Sending OTP with params:', params);
 
     return sns.publish(params).promise();
 }
 
-// Endpoint to handle OTP requests
-app.post('/send-otp', async (req, res) => { // Corrected route definition
+app.post('/send-otp', async (req, res) => {
     const { phoneNumber } = req.body;
 
     const otp = generateOTP();
     try {
-        await sendOTP(phoneNumber, otp);
-        // In a production scenario, you would not send the OTP back to the client
-        res.json({ success: true, otp }); // Send OTP for demonstration; remove in production
+        const result = await sendOTP(phoneNumber, otp);
+        console.log('SNS response:', result);
+        res.json({ success: true, otp });
     } catch (error) {
-        console.error("Error sending OTP:", error);
-        res.status(500).json({ success: false, message: "Failed to send OTP" });
+        console.error("Error sending OTP:", error); // Log the full error object
+        console.error("Error details:", error.stack); // Log the stack trace for detailed debugging
+        res.status(500).json({ success: false, message: "Failed to send OTP", error: error.message });
     }
 });
 
