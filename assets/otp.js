@@ -5,7 +5,7 @@ function sendOtpToServer(phoneNumber) {
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ phoneNumber: phoneNumber }),
+        body: JSON.stringify({ phoneNumber: phoneNumber }), // Pass the phone number in the request body
     })
     .then(response => response.json())
     .then(data => {
@@ -29,8 +29,12 @@ document.querySelector('.submit-button button').addEventListener('click', (e) =>
     // Get the phone number from the session storage (this should be pre-filled from earlier steps)
     const phoneNumber = sessionStorage.getItem('phone');
 
-    // Send OTP request to the server
-    sendOtpToServer(phoneNumber);
+    if (phoneNumber) {
+        // Send OTP request to the server
+        sendOtpToServer(phoneNumber);
+    } else {
+        alert("Phone number not found. Please ensure it is correctly entered.");
+    }
 });
 
 // Function to show the OTP modal

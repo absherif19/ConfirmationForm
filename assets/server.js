@@ -1,10 +1,15 @@
-// server.js
 require('dotenv').config();
 const express = require('express');
+const cors = require('cors'); // Import CORS to handle cross-origin requests
 const AWS = require('aws-sdk');
 
 const app = express();
 app.use(express.json());
+
+// Enable CORS for the specific origin (if you need to allow requests from a specific domain)
+app.use(cors({
+    origin: 'https://absherif19.github.io', // Replace with your client URL if needed
+}));
 
 const sns = new AWS.SNS({
     region: process.env.AWS_REGION,
@@ -22,17 +27,17 @@ function generateOTP(length = 6) {
 }
 
 // Function to send the OTP via Amazon SNS
-function sendOTP(otp) {
+function sendOTP(phoneNumber, otp) {
     const params = {
         Message: `Your OTP is ${otp}. Please enter this to confirm your submission.`,
-        PhoneNumber: '+971562588105',
+        PhoneNumber: phoneNumber, // Use the phone number from the request
     };
 
     return sns.publish(params).promise();
 }
 
 // Endpoint to handle OTP requests
-app.post('http://localhost:3000/send-otp', async (req, res) => {
+app.post('/send-otp', async (req, res) => { // Corrected route definition
     const { phoneNumber } = req.body;
 
     const otp = generateOTP();
