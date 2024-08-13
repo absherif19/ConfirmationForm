@@ -29,19 +29,28 @@ console.log("Decoded email:", decodedEmail);
 console.log("Decoded ID:", decodedId);
 console.log("Phone (not encoded):", phone);
 
-// Ensure the form fields exist before trying to set their values
-const emailField = document.getElementById('emailField');
-const idField = document.getElementById('idField');
-const phoneField = document.getElementById('phoneField');
+// Store the decoded values in session storage
+if (decodedEmail) {
+    sessionStorage.setItem('decodedEmail', decodedEmail);
+}
+
+if (decodedId) {
+    sessionStorage.setItem('decodedId', decodedId);
+}
+
+if (phone) {
+    sessionStorage.setItem('phone', phone);
+}
+
 
 if (emailField) {
-    emailField.value = decodedEmail || '';
+    emailField.value = sessionStorage.getItem('decodedEmail') || '';
 }
 
 if (idField) {
-    idField.value = decodedId || '';
+    idField.value = sessionStorage.getItem('decodedId') || '';
 }
 
 if (phoneField) {
-    phoneField.value = phone || '';
+    phoneField.value = sessionStorage.getItem('phone') || '';
 }
