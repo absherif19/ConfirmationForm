@@ -1,37 +1,24 @@
-// Load environment variables from .env file
-require('dotenv').config();
-
-const AWS = require('aws-sdk');
-
-// Initialize the SNS client with the correct region and credentials from environment variables
-const sns = new AWS.SNS({
-    region: process.env.AWS_REGION,
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
-});
-
-// Function to generate a random OTP
-function generateOTP(length = 6) {
-    let otp = '';
-    for (let i = 0; i < length; i++) {
-        otp += Math.floor(Math.random() * 10);
-    }
-    return otp;
-}
-
-// Function to send the OTP via Amazon SNS
-function sendOTP(phoneNumber, otp) {
-    const params = {
-        Message: `Your OTP is ${otp}. Please enter this to confirm your submission.`,
-        PhoneNumber: phoneNumber,
-    };
-
-    sns.publish(params, (err, data) => {
-        if (err) {
-            console.error("Error sending OTP via SNS:", err);
+// Function to send the OTP request to the server
+function sendOtpToServer(phoneNumber) {
+    fetch('/send-otp', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ phoneNumber: phoneNumber }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Store the OTP in session storage (for demo purposes; avoid in production)
+            sessionStorage.setItem('otp', data.otp);
+            showOTPModal();
         } else {
-            console.log("OTP sent successfully:", data.MessageId);
+            alert("Failed to send OTP. Please try again.");
         }
+    })
+    .catch(error => {
+        console.error("Error sending OTP:", error);
     });
 }
 
@@ -41,18 +28,9 @@ document.querySelector('.submit-button button').addEventListener('click', (e) =>
 
     // Get the phone number from the session storage (this should be pre-filled from earlier steps)
     const phoneNumber = sessionStorage.getItem('phone');
-    
-    // Generate the OTP
-    const otp = generateOTP();
 
-    // Store the OTP in session storage
-    sessionStorage.setItem('otp', otp);
-
-    // Send the OTP via SNS
-    sendOTP(phoneNumber, otp);
-
-    // Show the OTP modal
-    showOTPModal();
+    // Send OTP request to the server
+    sendOtpToServer(phoneNumber);
 });
 
 // Function to show the OTP modal
