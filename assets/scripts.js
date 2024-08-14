@@ -23,6 +23,7 @@ const decodedEmail = email ? decodeBase64(email) : null;
 const decodedId = id ? decodeBase64(id) : null;
 
 // Log the encoded and decoded values to the console
+console.log("testing console")
 console.log("Encoded email:", email);
 console.log("Encoded ID:", id);
 console.log("Decoded email:", decodedEmail);
